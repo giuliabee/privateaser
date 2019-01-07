@@ -177,6 +177,12 @@ for (let i in events) {
   }
 
   event.price = priceTime + pricePeople;
+
+  //compute commission
+  let commission = 0.3 * event.price;
+  event.commission.insurance = 0.5 * commission;
+  event.commission.treasury = event.persons;
+  event.commission.privateaser = commission - event.commission.insurance - event.commission.treasury;
 }
 
 console.log(bars);
