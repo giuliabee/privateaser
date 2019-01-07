@@ -178,17 +178,29 @@ for (let i in events) {
   }
 
   //compute deductible
+  let deductible = 0
   if (event.options.deductibleReduction === true) {
-    pricePeople += event.persons;
+    deductible = event.persons;
   }
 
-  event.price = priceTime + pricePeople;
+  event.price = priceTime + pricePeople + deductible;
 
   //compute commission
   let commission = 0.3 * event.price;
   event.commission.insurance = 0.5 * commission;
   event.commission.treasury = event.persons;
   event.commission.privateaser = commission - event.commission.insurance - event.commission.treasury;
+
+  //payment
+  for (let j in actors) {
+    if (actors[j].eventId === event.id) {
+      actors[j].payment[0].amount = event.price + deductible;
+      actors[j].payment[1].amount = event.price - commission;
+      actors[j].payment[2].amount = event.commission.insurance;
+      actors[j].payment[3].amount = event.commission.treasury;
+      actors[j].payment[4].amount = event.commission.privateaser + deductible;
+    }
+  }
 }
 
 console.log(bars);
