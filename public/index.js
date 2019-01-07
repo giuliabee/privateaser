@@ -162,18 +162,24 @@ function getBarPricePerPerson(barId) {
   }
 }
 
-// compute event price
 for (let i in events) {
+  // compute event price
   let event = events[i];
   let priceTime = event.persons * getBarPricePerPerson(event.barId);
   let pricePeople = event.time * getBarPricePerHour(event.barId);
 
+  //compute discount
   if (event.persons > 60) {
     pricePeople = 0.5 * pricePeople;
   } else if (event.persons > 20) {
     pricePeople = 0.7 * pricePeople;
   } else if (event.persons > 10) {
     pricePeople = 0.9 * pricePeople;
+  }
+
+  //compute deductible
+  if (event.options.deductibleReduction === true) {
+    pricePeople += event.persons;
   }
 
   event.price = priceTime + pricePeople;
