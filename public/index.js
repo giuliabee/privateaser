@@ -148,23 +148,35 @@ const actors = [{
 
 function getBarPricePerHour(barId) {
   for (let i in bars) {
-    let bar = bars[i]
-    if (bar.id == barId)
-      return bar.pricePerHour
+    let bar = bars[i];
+    if (bar.id === barId)
+      return bar.pricePerHour;
   }
 }
 
 function getBarPricePerPerson(barId) {
   for (let i in bars) {
-    let bar = bars[i]
-    if (bar.id == barId)
-      return bar.pricePerPerson
+    let bar = bars[i];
+    if (bar.id === barId)
+      return bar.pricePerPerson;
   }
 }
 
+// compute event price
 for (let i in events) {
-  let event = events[i]
-  event.price = event.time * getBarPricePerHour(event.barId) + event.persons * getBarPricePerPerson(event.barId)
+  let event = events[i];
+  let priceTime = event.persons * getBarPricePerPerson(event.barId);
+  let pricePeople = event.time * getBarPricePerHour(event.barId);
+
+  if (event.persons > 60) {
+    pricePeople = 0.5 * pricePeople;
+  } else if (event.persons > 20) {
+    pricePeople = 0.7 * pricePeople;
+  } else if (event.persons > 10) {
+    pricePeople = 0.9 * pricePeople;
+  }
+
+  event.price = priceTime + pricePeople;
 }
 
 console.log(bars);
